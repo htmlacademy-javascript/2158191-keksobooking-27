@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг»
 
 * Студент: [Владислав Стрижов](https://up.htmlacademy.ru/javascript/27/user/2158191).
-* Наставник: `Неизвестно`.
+* Наставник: `Aндрей Устименко`(https://htmlacademy.ru/profile/spiritmoon)
 
 ---
 

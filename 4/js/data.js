@@ -21,7 +21,7 @@ const PHOTOS = [
 
 const MAX_GUESTS = 6;
 const MAX_ROOMS = 10;
-const MAX_OFFERS = 10;
+export const MAX_OFFERS = 10;
 
 const TYPE_APPARTMENTS = ['palace', 'flat', 'house', 'bungalow', 'hotel'];
 const CHEKIN_CHECKOUT_TIME = ['12:00', '13:00', '14:00'];
@@ -61,11 +61,9 @@ const createOffer = (id, longitude, latitude) => ({
   }
 });
 
-const getOffers = (maxOffers) => Array.from({ length: maxOffers }, (_, id) => {
+export const getOffers = (maxOffers) => Array.from({ length: maxOffers }, (_, id) => {
   const latitude = getRandomPositiveFloat(LOCATION_DATA.MIN_LATITUDE, LOCATION_DATA.MAX_LATITUDE, 5);
   const longitude = getRandomPositiveFloat(LOCATION_DATA.MIN_LONGITUDE, LOCATION_DATA.MAX_LONGITUDE, 5);
 
   return createOffer(id + 1, longitude, latitude);
 });
-
-export {getOffers, MAX_OFFERS};

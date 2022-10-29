@@ -1,1 +1,1 @@
-import './renderOfferCards.js';
+import './offer-card.js';

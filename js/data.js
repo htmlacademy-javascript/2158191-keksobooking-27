@@ -38,32 +38,32 @@ const PRICE = {
   MAX: 100000,
 };
 
-const createOffer = (id, longitude, latitude) => ({
+const createOffer = (id, lng, lat) => ({
   author: {
     avatar: `img/avatars/user${id.toString().padStart(2, '0')}.png`,
   },
   offer: {
     title: getRandomArrayElement(TITLES),
-    address: `${latitude}, ${longitude}`,
+    address: `${lat}, ${lng}`,
     price: getRandomPositiveInteger(PRICE.MIN, PRICE.MAX),
     type: getRandomArrayElement(TYPE_APPARTMENTS),
     rooms: getRandomPositiveInteger(1, MAX_ROOMS),
     guests: getRandomPositiveInteger(1, MAX_GUESTS),
-    chekin: getRandomArrayElement(CHEKIN_CHECKOUT_TIME),
-    chekout: getRandomArrayElement(CHEKIN_CHECKOUT_TIME),
-    features: FEATURES.slice(0, getRandomPositiveInteger(1, FEATURES.length - 1)),
+    checkin: getRandomArrayElement(CHEKIN_CHECKOUT_TIME),
+    checkout: getRandomArrayElement(CHEKIN_CHECKOUT_TIME),
+    features: FEATURES.slice(0, getRandomPositiveInteger(1, FEATURES.length)),
     description: getRandomArrayElement(DESCRIPTIONS),
-    photos: PHOTOS.slice(0, getRandomPositiveInteger(1, PHOTOS.length - 1)),
+    photos: PHOTOS.slice(0, getRandomPositiveInteger(1, PHOTOS.length)),
   },
   location: {
-    lat: latitude,
-    lng: longitude,
+    lat,
+    lng,
   }
 });
 
 export const getOffers = (maxOffers) => Array.from({ length: maxOffers }, (_, id) => {
-  const latitude = getRandomPositiveFloat(LOCATION_DATA.MIN_LATITUDE, LOCATION_DATA.MAX_LATITUDE, 5);
-  const longitude = getRandomPositiveFloat(LOCATION_DATA.MIN_LONGITUDE, LOCATION_DATA.MAX_LONGITUDE, 5);
+  const lat = getRandomPositiveFloat(LOCATION_DATA.MIN_LATITUDE, LOCATION_DATA.MAX_LATITUDE, 5);
+  const lng = getRandomPositiveFloat(LOCATION_DATA.MIN_LONGITUDE, LOCATION_DATA.MAX_LONGITUDE, 5);
 
-  return createOffer(id + 1, longitude, latitude);
+  return createOffer(id + 1, lng, lat);
 });

@@ -22,3 +22,28 @@ export const getRandomPositiveFloat = (n1, n2, digits) => {
 };
 
 export const getRandomArrayElement = (elements) => elements[getRandomPositiveInteger(0, elements.length - 1)];
+
+export const disableForm = (formEl) => {
+  const formElems = formEl.children;
+
+  formEl.classList.add(`${formEl.classList[0]}--disabled`);
+
+  for (const child of formElems) {
+    child.disabled = true;
+  }
+};
+
+export const enableForm = (formEl) => {
+  const formElems = formEl.children;
+
+  formEl.classList.remove(`${formEl.classList[0]}--disabled`);
+
+  for (const child of formElems) {
+    child.disabled = false;
+  }
+};
+
+const fieldsetElem = document.querySelector('.ad-form');
+
+disableForm(fieldsetElem);
+enableForm(fieldsetElem);

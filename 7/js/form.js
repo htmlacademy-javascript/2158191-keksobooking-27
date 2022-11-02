@@ -1,3 +1,8 @@
+const MAX_LENGTH_TITLE = 100;
+const MIN_LENGTH_TITLE = 30;
+const MAX_VALUE_PRICE = 100000;
+const MIN_VALUE_PRICE = 0;
+
 const offerForm = document.querySelector('.ad-form');
 const pristine = new Pristine( offerForm, {
   classTo: 'ad-form__element',
@@ -6,13 +11,15 @@ const pristine = new Pristine( offerForm, {
   errorTextParent: 'ad-form__element',
 }, true);
 
-const validateTitle = (value) => value.length >= 30 && value.length <= 100;
+const validateTitle = (value) => value.length >= MIN_LENGTH_TITLE && value.length <= MAX_LENGTH_TITLE;
 
-pristine.addValidator(offerForm.querySelector('#title'), validateTitle, 'от 30 до 100 символов');
+pristine.addValidator(offerForm.querySelector('#title'), validateTitle, `от ${MIN_LENGTH_TITLE} до ${MAX_LENGTH_TITLE} символов`);
 
-const validatePrice = (value) => value <= 100000;
+const validatePrice = (value) => value >= MIN_VALUE_PRICE && value <= MAX_VALUE_PRICE;
 
-pristine.addValidator(offerForm.querySelector('#price'), validatePrice, 'Максимальное значение — 100000');
+const getPriceErrorMessage = () => `Максимальная цена — ${MAX_VALUE_PRICE} руб, минимальная цена — ${MIN_VALUE_PRICE} руб`;
+
+pristine.addValidator(offerForm.querySelector('#price'), validatePrice, getPriceErrorMessage);
 
 const roomsField = offerForm.querySelector('#room_number');
 const guestsField = offerForm.querySelector('#capacity');
@@ -27,14 +34,18 @@ const rooms = {
 const validateRooms = () => rooms[roomsField.value].includes(guestsField.value);
 
 const getRoomsErrorMessage = () => {
-  if (roomsField.value === '1'){
-    return '1 комната для 1 гостя';
-  } else if (roomsField.value === '2') {
-    return 'для 1 гостя или 2 гостей';
-  } else if (roomsField.value === '3') {
-    return 'для 1, 2 или 3 гостей';
-  } else {
-    return 'не для гостей';
+  switch (roomsField.value) {
+    case '1':
+      return '1 комната для 1 гостя';
+
+    case '2':
+      return 'для 1 гостя или 2 гостей';
+
+    case '3':
+      return 'для 1, 2 или 3 гостей';
+
+    default:
+      return 'не для гостей';
   }
 };
 

@@ -23,23 +23,23 @@ export const getRandomPositiveFloat = (n1, n2, digits) => {
 
 export const getRandomArrayElement = (elements) => elements[getRandomPositiveInteger(0, elements.length - 1)];
 
-export const disableForm = (parentElem) => {
-  const formElems = parentElem.children;
+export const disableForm = (formEl) => {
+  const formElems = formEl.children;
 
-  parentElem.classList.add(`${parentElem.classList[0]}--disabled`);
+  formEl.classList.add(`${formEl.classList[0]}--disabled`);
 
   for (const child of formElems) {
-    child.setAttribute('disabled', 'disabled');
+    child.disabled = true;
   }
 };
 
-export const enableForm = (parentElem) => {
-  const formElems = parentElem.children;
+export const enableForm = (formEl) => {
+  const formElems = formEl.children;
 
-  parentElem.classList.remove(`${parentElem.classList[0]}--disabled`);
+  formEl.classList.remove(`${formEl.classList[0]}--disabled`);
 
   for (const child of formElems) {
-    child.removeAttribute('disabled', 'disabled');
+    child.disabled = false;
   }
 };
 

@@ -1,3 +1,5 @@
+import { disableForm } from './utile.js';
+
 const MAX_LENGTH_TITLE = 100;
 const MIN_LENGTH_TITLE = 30;
 const MAX_VALUE_PRICE = 100000;
@@ -15,7 +17,7 @@ const ROOMS = {
   100: ['0'],
 };
 
-export const offerForm = document.querySelector('.ad-form');
+const offerForm = document.querySelector('.ad-form');
 
 const pristine = new Pristine( offerForm, {
   classTo: 'ad-form__element',
@@ -112,3 +114,15 @@ sliderElem.noUiSlider.on('update', () => {
   pristine.validate(priceField);
   priceField.value = sliderElem.noUiSlider.get();
 });
+
+const addressField = offerForm.querySelector('#address');
+
+export const setAddressField = (lat, lng) => {
+  addressField.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+};
+
+export const adForm = document.querySelector('.ad-form');
+export const filters = document.querySelector('.map__filters');
+
+disableForm(adForm);
+disableForm(filters);

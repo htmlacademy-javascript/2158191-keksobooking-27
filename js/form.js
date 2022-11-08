@@ -1,3 +1,5 @@
+import { disableForm } from './utile.js';
+
 const MAX_LENGTH_TITLE = 100;
 const MIN_LENGTH_TITLE = 30;
 const MAX_VALUE_PRICE = 100000;
@@ -26,17 +28,19 @@ const pristine = new Pristine( offerForm, {
 
 const validateTitle = (value) => value.length >= MIN_LENGTH_TITLE && value.length <= MAX_LENGTH_TITLE;
 
-pristine.addValidator(offerForm.getElementById('#title'), validateTitle, `от ${MIN_LENGTH_TITLE} до ${MAX_LENGTH_TITLE} символов`);
+const titleField = offerForm.querySelector('#title');
 
-const typeField = offerForm.getElementById('#type ');
-const priceField = offerForm.getElementById('#price');
+pristine.addValidator(titleField, validateTitle, `от ${MIN_LENGTH_TITLE} до ${MAX_LENGTH_TITLE} символов`);
+
+const typeField = offerForm.querySelector('#type');
+const priceField = offerForm.querySelector('#price');
 
 const onTypeChange = () => {
   priceField.placeholder = MIN_PRICES[typeField.value];
   pristine.validate(priceField);
 };
 
-typeField.addEventListener('change',onTypeChange);
+typeField.addEventListener('change', onTypeChange);
 
 const validatePrice = (value) => value >= MIN_PRICES[typeField.value] && value <= MAX_VALUE_PRICE;
 
@@ -44,8 +48,8 @@ const getPriceErrorMessage = () => `Максимальная цена — ${MAX_
 
 pristine.addValidator(priceField, validatePrice, getPriceErrorMessage);
 
-const roomsField = offerForm.getElementById('#room_number');
-const guestsField = offerForm.getElementById('#capacity');
+const roomsField = offerForm.querySelector('#room_number');
+const guestsField = offerForm.querySelector('#capacity');
 
 const validateRooms = () => ROOMS[roomsField.value].includes(guestsField.value);
 
@@ -68,8 +72,8 @@ const getRoomsErrorMessage = () => {
 pristine.addValidator(roomsField, validateRooms, getRoomsErrorMessage);
 
 const checkFieldset = offerForm.querySelector('.ad-form__element--time');
-const checkinField = offerForm.getElementById('#timein');
-const checkoutField = offerForm.getElementById('#timeout');
+const checkinField = offerForm.querySelector('#timein');
+const checkoutField = offerForm.querySelector('#timeout');
 
 const onCheckChange = (evt) => {
   if (evt.target.id === 'timein') {
@@ -85,3 +89,40 @@ offerForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
   pristine.validate();
 });
+
+const sliderElem = offerForm.querySelector('.ad-form__slider');
+
+noUiSlider.create(sliderElem,{
+  range: {
+    min: 0,
+    max: 100000,
+  },
+  start: priceField.placeholder,
+  step: 100,
+  coonect: 'lower',
+  format: {
+    to: function (value) {
+      return value.toFixed(0);
+    },
+    from: function (value) {
+      return parseFloat(value);
+    },
+  },
+});
+
+sliderElem.noUiSlider.on('update', () => {
+  pristine.validate(priceField);
+  priceField.value = sliderElem.noUiSlider.get();
+});
+
+const addressField = offerForm.querySelector('#address');
+
+export const setAddressField = (lat, lng) => {
+  addressField.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+};
+
+export const adForm = document.querySelector('.ad-form');
+export const filters = document.querySelector('.map__filters');
+
+disableForm(adForm);
+disableForm(filters);

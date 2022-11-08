@@ -42,8 +42,3 @@ export const enableForm = (formEl) => {
     child.disabled = false;
   }
 };
-
-const fieldsetElem = document.querySelector('.ad-form');
-
-disableForm(fieldsetElem);
-enableForm(fieldsetElem);

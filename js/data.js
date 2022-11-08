@@ -67,3 +67,5 @@ export const getOffers = (maxOffers) => Array.from({ length: maxOffers }, (_, id
 
   return createOffer(id + 1, lng, lat);
 });
+
+export const offers = getOffers(MAX_OFFERS);

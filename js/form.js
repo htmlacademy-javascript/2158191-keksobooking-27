@@ -1,4 +1,4 @@
-import { disableForm } from './utile.js';
+import { disablePage } from './utile.js';
 
 const MAX_LENGTH_TITLE = 100;
 const MIN_LENGTH_TITLE = 30;
@@ -101,10 +101,10 @@ noUiSlider.create(sliderElem,{
   step: 100,
   coonect: 'lower',
   format: {
-    to: function (value) {
+    to(value) {
       return value.toFixed(0);
     },
-    from: function (value) {
+    from(value) {
       return parseFloat(value);
     },
   },
@@ -121,8 +121,4 @@ export const setAddressField = (lat, lng) => {
   addressField.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
 };
 
-export const adForm = document.querySelector('.ad-form');
-export const filters = document.querySelector('.map__filters');
-
-disableForm(adForm);
-disableForm(filters);
+disablePage();

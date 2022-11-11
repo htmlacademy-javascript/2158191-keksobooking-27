@@ -1,7 +1,7 @@
 import { offers } from './data.js';
-import { adForm, filters, setAddressField } from './form.js';
+import { setAddressField } from './form.js';
 import { createCard } from './offer-card.js';
-import { enableForm } from './utile.js';
+import { enablePage } from './utile.js';
 
 const COORDINATES = {
   lat: 35.68421,
@@ -30,31 +30,34 @@ const mainPinMarker = L.marker(
   }
 );
 
-const addPinMarkers = (ads) => {
+const createPin = (ad) => {
+  const {location:{lat,lng}} = ad;
+
+  const marker = L.marker(
+    {
+      lat,
+      lng
+    },
+    {
+      icon: pinIcon
+    }
+  );
+
+  return marker;
+};
+
+const addPinsToMap = (ads) => {
   markerGroup.clearLayers();
 
   ads.forEach((ad) => {
-    const {location:{lat,lng}} = ad;
-
-    const marker = L.marker(
-      {
-        lat,
-        lng
-      },
-      {
-        icon: pinIcon
-      }
-    );
-
-    marker.addTo(markerGroup)
+    createPin(ad).addTo(markerGroup)
       .bindPopup(createCard(ad));
   });
 };
 
 map.on('load', () => {
-  enableForm(adForm);
-  enableForm(filters);
-  addPinMarkers(offers);
+  enablePage();
+  addPinsToMap(offers);
 });
 
 map.setView(COORDINATES, 13);

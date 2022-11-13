@@ -1,8 +1,10 @@
-import { offers } from './data.js';
 import { setAddressField } from './form.js';
+import { showAlertMessage } from './messages.js';
 import { createCard } from './offer-card.js';
 import { enablePage } from './utile.js';
+import { getData } from './api.js';
 
+const MAX_ADS = 10;
 const COORDINATES = {
   lat: 35.68421,
   lng: 139.75107,
@@ -46,10 +48,21 @@ const createPin = (ad) => {
   return marker;
 };
 
+export const setStartView = () =>{
+  mainPinMarker.setLatLng(COORDINATES);
+
+  const {lat, lng} = mainPinMarker.getLatLng();
+
+  setAddressField(lat, lng);
+  map.setView(COORDINATES, 13);
+};
+
 const addPinsToMap = (ads) => {
   markerGroup.clearLayers();
 
-  ads.forEach((ad) => {
+  const maxAds = ads.slice(0, MAX_ADS);
+
+  maxAds.forEach((ad) => {
     createPin(ad).addTo(markerGroup)
       .bindPopup(createCard(ad));
   });
@@ -57,20 +70,20 @@ const addPinsToMap = (ads) => {
 
 map.on('load', () => {
   enablePage();
-  addPinsToMap(offers);
+  getData(addPinsToMap, showAlertMessage);
+  setStartView();
 });
-
-map.setView(COORDINATES, 13);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 19,
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
-mainPinMarker.setLatLng(COORDINATES);
 mainPinMarker.addTo(map);
 mainPinMarker.on('moveend', (evt) => {
   const {lat, lng} = evt.target.getLatLng();
 
   setAddressField(lat, lng);
 });
+
+setStartView();

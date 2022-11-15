@@ -1,8 +1,14 @@
-export const getData = async (onSuccess, onFail) => {
-  try {
-    const response = await fetch('https://27.javascript.pages.academy/keksobooking/data');
+import { setStartView } from './map.js';
+import { resetForm } from './form.js';
 
-    if(!response.ok) {
+const FETCH_ADS = 'https://27.javascript.pages.academy/keksobooking/data';
+const SAVE_AD = 'https://27.javascript.pages.academy/keksobooking';
+
+export const getAdsData = async (onSuccess, onFail) => {
+  try {
+    const response = await fetch(FETCH_ADS);
+
+    if (!response.ok) {
       throw new Error ('Не удалось загрузить объявления');
     }
 
@@ -13,20 +19,21 @@ export const getData = async (onSuccess, onFail) => {
   }
 };
 
-export const sendData = async(onSuccess, onFail, body) => {
+export const saveAdData = async(onSuccess, onFail, body) => {
   try {
-    const response = await fetch(
-      'https://27.javascript.pages.academy/keksobooking',
+    const response = await fetch(SAVE_AD,
       {
         method: 'POST',
         body,
       }
     );
 
-    if(!response.ok) {
+    if (!response.ok) {
       throw new Error ('Не удалось отправить. Попробуйте еще раз');
     }
 
+    resetForm();
+    setStartView();
     onSuccess();
   } catch (error) {
     onFail(error.message);

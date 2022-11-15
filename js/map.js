@@ -1,8 +1,8 @@
 import { setAddressField } from './form.js';
-import { showAlertMessage } from './messages.js';
+import { showAlertDialog } from './dialogs.js';
 import { createCard } from './offer-card.js';
-import { enablePage } from './utile.js';
-import { getData } from './api.js';
+import { enablePage } from './form.js';
+import { getAdsData } from './api.js';
 
 const MAX_ADS = 10;
 const COORDINATES = {
@@ -70,7 +70,7 @@ const addPinsToMap = (ads) => {
 
 map.on('load', () => {
   enablePage();
-  getData(addPinsToMap, showAlertMessage);
+  getAdsData(addPinsToMap, showAlertDialog);
   setStartView();
 });
 

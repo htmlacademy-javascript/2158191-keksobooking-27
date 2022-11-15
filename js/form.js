@@ -1,7 +1,6 @@
-import { sendData } from './api.js';
-import { disablePage } from './utile.js';
-import { showSuccessMessage, showErrorMessage } from './messages.js';
-import { setStartView } from './map.js';
+import { saveAdData } from './api.js';
+import { showSuccessDialog, showErrorDialog } from './dialogs.js';
+import { enableForm, disableForm } from './utile.js';
 
 const MAX_LENGTH_TITLE = 100;
 const MIN_LENGTH_TITLE = 30;
@@ -19,6 +18,7 @@ const ROOMS = {
   3: ['3', '2' , '1'],
   100: ['0'],
 };
+const DEFAULT_PRICE_VALUE = 0;
 
 const offerForm = document.querySelector('.ad-form');
 const titleField = offerForm.querySelector('#title');
@@ -32,6 +32,22 @@ const priceField = offerForm.querySelector('#price');
 const sliderElem = offerForm.querySelector('.ad-form__slider');
 const addressField = offerForm.querySelector('#address');
 const submitBut = offerForm.querySelector('.ad-form__submit');
+
+const disablePage = () => {
+  const adForm = document.querySelector('.ad-form');
+  const filter = document.querySelector('.map__filters');
+
+  disableForm(adForm);
+  disableForm(filter);
+};
+
+export const enablePage = () => {
+  const adForm = document.querySelector('.ad-form');
+  const filter = document.querySelector('.map__filters');
+
+  enableForm(adForm);
+  enableForm(filter);
+};
 
 const pristine = new Pristine( offerForm, {
   classTo: 'ad-form__element',
@@ -96,7 +112,7 @@ noUiSlider.create(sliderElem,{
   },
   start: 0,
   step: 100,
-  coonect: 'lower',
+  connect: 'lower',
   format: {
     to(value) {
       return value.toFixed(0);
@@ -107,8 +123,11 @@ noUiSlider.create(sliderElem,{
   },
 });
 
-sliderElem.noUiSlider.on('update', () => {
+sliderElem.noUiSlider.on('end', () => {
   pristine.validate(priceField);
+});
+
+sliderElem.noUiSlider.on('update', () => {
   priceField.value = sliderElem.noUiSlider.get();
 });
 
@@ -116,37 +135,30 @@ export const setAddressField = (lat, lng) => {
   addressField.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
 };
 
-const blockSubmitBut = () => {
+const blockSubmitButton = () => {
   submitBut.disabled = true;
   submitBut.textContent = 'Публикую';
 };
-const unblockSubmitBut = () => {
+const unblockSubmitButton = () => {
   submitBut.disabled = false;
   submitBut.textContent = 'Опубликовать';
 };
 
-const resetForm = () => {
+export const resetForm = () => {
   offerForm.reset();
-  sliderElem.noUiSlider.set(0);
-  priceField.value = 0;
+  sliderElem.noUiSlider.set(DEFAULT_PRICE_VALUE);
+  priceField.value = DEFAULT_PRICE_VALUE;
 };
 
-const setOnFormSubmit = (cb) => {
-  offerForm.addEventListener('submit', async (evt) => {
-    evt.preventDefault();
 
-    if(pristine.validate()){
-      blockSubmitBut();
-      await cb(new FormData(evt.target));
-      unblockSubmitBut();
-      resetForm();
-      setStartView();
-    }
-  });
-};
+offerForm.addEventListener('submit', async (evt) => {
+  evt.preventDefault();
+
+  if(pristine.validate()){
+    blockSubmitButton();
+    await saveAdData(showSuccessDialog, showErrorDialog, new FormData(evt.target));
+    unblockSubmitButton();
+  }
+});
 
 disablePage();
-
-setOnFormSubmit(async (data) => {
-  sendData(showSuccessMessage, showErrorMessage, data);
-});

@@ -1,12 +1,15 @@
-import { offers } from './data.js';
-import { adForm, filters, setAddressField } from './form.js';
+import { setAddressField } from './form.js';
+import { showAlertDialog } from './dialogs.js';
 import { createCard } from './offer-card.js';
-import { enableForm } from './utile.js';
+import { enablePage } from './form.js';
+import { getAdsData } from './api.js';
 
+const MAX_ADS = 10;
 const COORDINATES = {
   lat: 35.68421,
   lng: 139.75107,
 };
+const ZOOM = 13;
 const map = L.map('map-canvas');
 const markerGroup = L.layerGroup().addTo(map);
 const mainPinIcon = L.icon({
@@ -30,44 +33,57 @@ const mainPinMarker = L.marker(
   }
 );
 
-const addPinMarkers = (ads) => {
+const createPin = (ad) => {
+  const {location: {lat, lng}} = ad;
+
+  const marker = L.marker(
+    {
+      lat,
+      lng
+    },
+    {
+      icon: pinIcon
+    }
+  );
+
+  return marker;
+};
+
+export const setStartView = () =>{
+  mainPinMarker.setLatLng(COORDINATES);
+
+  const {lat, lng} = mainPinMarker.getLatLng();
+
+  setAddressField(lat, lng);
+  map.setView(COORDINATES, ZOOM);
+};
+
+const addPinsToMap = (ads) => {
   markerGroup.clearLayers();
 
-  ads.forEach((ad) => {
-    const {location:{lat,lng}} = ad;
+  const maxAds = ads.slice(0, MAX_ADS);
 
-    const marker = L.marker(
-      {
-        lat,
-        lng
-      },
-      {
-        icon: pinIcon
-      }
-    );
-
-    marker.addTo(markerGroup)
+  maxAds.forEach((ad) => {
+    createPin(ad).addTo(markerGroup)
       .bindPopup(createCard(ad));
   });
 };
 
 map.on('load', () => {
-  enableForm(adForm);
-  enableForm(filters);
-  addPinMarkers(offers);
+  enablePage();
+  getAdsData(addPinsToMap, showAlertDialog);
 });
-
-map.setView(COORDINATES, 13);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 19,
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
-mainPinMarker.setLatLng(COORDINATES);
 mainPinMarker.addTo(map);
 mainPinMarker.on('moveend', (evt) => {
   const {lat, lng} = evt.target.getLatLng();
 
   setAddressField(lat, lng);
 });
+
+setStartView();

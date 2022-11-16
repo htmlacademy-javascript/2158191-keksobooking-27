@@ -1048,3 +1048,16 @@ fieldset {
 .hidden {
   display: none;
 }
+
+/* Сообщение ошибки получения данных с свервера
+   ========================================================================== */
+.alert-message {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  padding: 10px 3px;
+  font-Size: 30px;
+  text-align: center;
+  background-color: red;
+}

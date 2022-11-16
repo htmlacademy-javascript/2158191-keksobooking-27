@@ -23,7 +23,7 @@ export const getRandomPositiveFloat = (n1, n2, digits) => {
 
 export const getRandomArrayElement = (elements) => elements[getRandomPositiveInteger(0, elements.length - 1)];
 
-const disableForm = (formEl) => {
+export const disableForm = (formEl) => {
   const formElems = formEl.children;
 
   formEl.classList.add(`${formEl.classList[0]}--disabled`);
@@ -33,7 +33,7 @@ const disableForm = (formEl) => {
   }
 };
 
-const enableForm = (formEl) => {
+export const enableForm = (formEl) => {
   const formElems = formEl.children;
 
   formEl.classList.remove(`${formEl.classList[0]}--disabled`);
@@ -41,20 +41,4 @@ const enableForm = (formEl) => {
   for (const child of formElems) {
     child.disabled = false;
   }
-};
-
-export const disablePage = () => {
-  const adForm = document.querySelector('.ad-form');
-  const filter = document.querySelector('.map__filters');
-
-  disableForm(adForm);
-  disableForm(filter);
-};
-
-export const enablePage = () => {
-  const adForm = document.querySelector('.ad-form');
-  const filter = document.querySelector('.map__filters');
-
-  enableForm(adForm);
-  enableForm(filter);
 };

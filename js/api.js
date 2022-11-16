@@ -1,6 +1,3 @@
-import { setStartView } from './map.js';
-import { resetForm } from './form.js';
-
 const FETCH_ADS = 'https://27.javascript.pages.academy/keksobooking/data';
 const SAVE_AD = 'https://27.javascript.pages.academy/keksobooking';
 
@@ -32,8 +29,6 @@ export const saveAdData = async(onSuccess, onFail, body) => {
       throw new Error ('Не удалось отправить. Попробуйте еще раз');
     }
 
-    resetForm();
-    setStartView();
     onSuccess();
   } catch (error) {
     onFail(error.message);

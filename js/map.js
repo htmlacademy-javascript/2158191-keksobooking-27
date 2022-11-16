@@ -9,6 +9,7 @@ const COORDINATES = {
   lat: 35.68421,
   lng: 139.75107,
 };
+const ZOOM = 13;
 const map = L.map('map-canvas');
 const markerGroup = L.layerGroup().addTo(map);
 const mainPinIcon = L.icon({
@@ -33,7 +34,7 @@ const mainPinMarker = L.marker(
 );
 
 const createPin = (ad) => {
-  const {location:{lat,lng}} = ad;
+  const {location: {lat, lng}} = ad;
 
   const marker = L.marker(
     {
@@ -54,7 +55,7 @@ export const setStartView = () =>{
   const {lat, lng} = mainPinMarker.getLatLng();
 
   setAddressField(lat, lng);
-  map.setView(COORDINATES, 13);
+  map.setView(COORDINATES, ZOOM);
 };
 
 const addPinsToMap = (ads) => {
@@ -71,7 +72,6 @@ const addPinsToMap = (ads) => {
 map.on('load', () => {
   enablePage();
   getAdsData(addPinsToMap, showAlertDialog);
-  setStartView();
 });
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

@@ -12,12 +12,12 @@ const onDialogEscKeydown = (evt) => {
   }
 };
 
-const onEmptySpaceClick = () => hideDialog();
+const onClick = () => hideDialog();
 
 export const showSuccessDialog = () => {
   activeDialog = successDialogTemplate.firstElementChild.cloneNode(true);
   document.addEventListener('keydown', onDialogEscKeydown);
-  document.addEventListener('click', onEmptySpaceClick);
+  document.addEventListener('click', onClick);
   body.append(activeDialog);
   body.style.overflow = 'hidden';
 };
@@ -30,10 +30,12 @@ export const showErrorDialog = () => {
   body.style.overflow = 'hidden';
 };
 
-function hideDialog () {
+/* Используется function declaration так как функцию необходимо использовать до объявления и она содержит
+ссылки на функции onDialogEscKeydown и onClick, которые в свою очередь имеют ссылки на функцию hideDialog */
+function hideDialog() {
   activeDialog.remove();
   document.removeEventListener('keydown', onDialogEscKeydown);
-  document.removeEventListener('click', onEmptySpaceClick);
+  document.removeEventListener('click', onClick);
   body.style.overflow = 'auto';
   activeDialog = null;
 }

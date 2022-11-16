@@ -1,3 +1,4 @@
+import { setStartView } from './map.js';
 import { saveAdData } from './api.js';
 import { showSuccessDialog, showErrorDialog } from './dialogs.js';
 import { enableForm, disableForm } from './utile.js';
@@ -32,20 +33,15 @@ const priceField = offerForm.querySelector('#price');
 const sliderElem = offerForm.querySelector('.ad-form__slider');
 const addressField = offerForm.querySelector('#address');
 const submitBut = offerForm.querySelector('.ad-form__submit');
+const filter = document.querySelector('.map__filters');
 
 const disablePage = () => {
-  const adForm = document.querySelector('.ad-form');
-  const filter = document.querySelector('.map__filters');
-
-  disableForm(adForm);
+  disableForm(offerForm);
   disableForm(filter);
 };
 
 export const enablePage = () => {
-  const adForm = document.querySelector('.ad-form');
-  const filter = document.querySelector('.map__filters');
-
-  enableForm(adForm);
+  enableForm(offerForm);
   enableForm(filter);
 };
 
@@ -154,9 +150,13 @@ export const resetForm = () => {
 offerForm.addEventListener('submit', async (evt) => {
   evt.preventDefault();
 
-  if(pristine.validate()){
+  if (pristine.validate()) {
     blockSubmitButton();
-    await saveAdData(showSuccessDialog, showErrorDialog, new FormData(evt.target));
+    await saveAdData(() => {
+      showSuccessDialog();
+      resetForm();
+      setStartView();
+    }, showErrorDialog, new FormData(evt.target));
     unblockSubmitButton();
   }
 });

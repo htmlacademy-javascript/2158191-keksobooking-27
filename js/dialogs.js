@@ -5,38 +5,38 @@ const successDialogTemplate = document.querySelector('#success').content;
 const body = document.querySelector('body');
 let activeDialog = null;
 
-const onDialogEscKeydown = (evt) => {
+const onDialogKeydown = (evt) => {
   if (evt.key === 'Escape') {
     evt.preventDefault();
     hideDialog();
   }
 };
 
-const onClick = () => hideDialog();
+const onDialogClick = () => hideDialog();
 
 export const showSuccessDialog = () => {
   activeDialog = successDialogTemplate.firstElementChild.cloneNode(true);
-  document.addEventListener('keydown', onDialogEscKeydown);
-  document.addEventListener('click', onClick);
+  document.addEventListener('keydown', onDialogKeydown);
+  document.addEventListener('click', onDialogClick);
   body.append(activeDialog);
-  body.style.overflow = 'hidden';
+  body.classList.add('overflow-hidden');
 };
 
 export const showErrorDialog = () => {
   activeDialog = errorDialogTemplate.firstElementChild.cloneNode(true);
-  document.addEventListener('keydown', onDialogEscKeydown);
+  document.addEventListener('keydown', onDialogKeydown);
   activeDialog.querySelector('.error__button').addEventListener('click', () => hideDialog());
   body.append(activeDialog);
-  body.style.overflow = 'hidden';
+  body.classList.add('overflow-hidden');
 };
 
 /* Используется function declaration так как функцию необходимо использовать до объявления и она содержит
-ссылки на функции onDialogEscKeydown и onClick, которые в свою очередь имеют ссылки на функцию hideDialog */
+ссылки на функции onDialogKeydown и onDialogClick, которые в свою очередь имеют ссылки на функцию hideDialog */
 function hideDialog() {
   activeDialog.remove();
-  document.removeEventListener('keydown', onDialogEscKeydown);
-  document.removeEventListener('click', onClick);
-  body.style.overflow = 'auto';
+  document.removeEventListener('keydown', onDialogKeydown);
+  document.removeEventListener('click', onDialogClick);
+  body.classList.remove('overflow-hidden');
   activeDialog = null;
 }
 

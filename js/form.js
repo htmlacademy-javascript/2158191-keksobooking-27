@@ -146,17 +146,18 @@ export const resetForm = () => {
   priceField.value = DEFAULT_PRICE_VALUE;
 };
 
+const onSuccessSaveAdData = () => {
+  showSuccessDialog();
+  resetForm();
+  setStartView();
+};
 
 offerForm.addEventListener('submit', async (evt) => {
   evt.preventDefault();
 
   if (pristine.validate()) {
     blockSubmitButton();
-    await saveAdData(() => {
-      showSuccessDialog();
-      resetForm();
-      setStartView();
-    }, showErrorDialog, new FormData(evt.target));
+    await saveAdData(onSuccessSaveAdData, showErrorDialog, new FormData(evt.target));
     unblockSubmitButton();
   }
 });

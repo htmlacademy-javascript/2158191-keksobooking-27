@@ -71,8 +71,9 @@ const addPinsToMap = (ads) => {
 
 map.on('load', () => {
   enablePage();
+  setStartView();
   getAdsData(addPinsToMap, showAlertDialog);
-});
+}).setView(COORDINATES, ZOOM);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 19,
@@ -85,5 +86,3 @@ mainPinMarker.on('moveend', (evt) => {
 
   setAddressField(lat, lng);
 });
-
-setStartView();

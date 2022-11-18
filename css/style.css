@@ -1045,6 +1045,10 @@ fieldset {
   overflow: hidden;
 }
 
+.overflow-hidden {
+  overflow: hidden;
+}
+
 .hidden {
   display: none;
 }

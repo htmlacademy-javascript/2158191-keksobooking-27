@@ -10,6 +10,7 @@ export const getAdsData = async (onSuccess, onFail) => {
     }
 
     const offers = await response.json();
+
     onSuccess(offers);
   } catch (error) {
     onFail(error.message);

@@ -1,7 +1,7 @@
 import { setStartView } from './map.js';
 import { saveAdData } from './api.js';
 import { showSuccessDialog, showErrorDialog } from './dialogs.js';
-import { enableForm, disableForm } from './utile.js';
+import { disableForm } from './utile.js';
 
 const MAX_LENGTH_TITLE = 100;
 const MIN_LENGTH_TITLE = 30;
@@ -21,7 +21,8 @@ const ROOMS = {
 };
 const DEFAULT_PRICE_VALUE = 0;
 
-const offerForm = document.querySelector('.ad-form');
+export const offerForm = document.querySelector('.ad-form');
+export const filters = document.querySelector('.map__filters');
 const titleField = offerForm.querySelector('#title');
 const checkFieldset = offerForm.querySelector('.ad-form__element--time');
 const checkinField = offerForm.querySelector('#timein');
@@ -32,17 +33,11 @@ const typeField = offerForm.querySelector('#type');
 const priceField = offerForm.querySelector('#price');
 const sliderElem = offerForm.querySelector('.ad-form__slider');
 const addressField = offerForm.querySelector('#address');
-const submitBut = offerForm.querySelector('.ad-form__submit');
-const filter = document.querySelector('.map__filters');
+const submitButton = offerForm.querySelector('.ad-form__submit');
 
 const disablePage = () => {
   disableForm(offerForm);
-  disableForm(filter);
-};
-
-export const enablePage = () => {
-  enableForm(offerForm);
-  enableForm(filter);
+  disableForm(filters);
 };
 
 const pristine = new Pristine( offerForm, {
@@ -132,12 +127,12 @@ export const setAddressField = (lat, lng) => {
 };
 
 const blockSubmitButton = () => {
-  submitBut.disabled = true;
-  submitBut.textContent = 'Публикую';
+  submitButton.disabled = true;
+  submitButton.textContent = 'Публикую';
 };
 const unblockSubmitButton = () => {
-  submitBut.disabled = false;
-  submitBut.textContent = 'Опубликовать';
+  submitButton.disabled = false;
+  submitButton.textContent = 'Опубликовать';
 };
 
 export const resetForm = () => {

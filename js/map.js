@@ -1,8 +1,9 @@
-import { setAddressField } from './form.js';
+import { filters, offerForm, setAddressField } from './form.js';
 import { showAlertDialog } from './dialogs.js';
 import { createCard } from './offer-card.js';
-import { enablePage } from './form.js';
 import { getAdsData } from './api.js';
+import { SetFilter } from './filter.js';
+import { debounce, enableForm } from './utile.js';
 
 const MAX_ADS = 10;
 const COORDINATES = {
@@ -58,7 +59,7 @@ export const setStartView = () =>{
   map.setView(COORDINATES, ZOOM);
 };
 
-const addPinsToMap = (ads) => {
+export const addPinsToMap = (ads) => {
   markerGroup.clearLayers();
 
   const maxAds = ads.slice(0, MAX_ADS);
@@ -69,10 +70,16 @@ const addPinsToMap = (ads) => {
   });
 };
 
+const onSuccessGetData = (offers) => {
+  addPinsToMap(offers);
+  SetFilter(offers, MAX_ADS, debounce(addPinsToMap));
+  enableForm(filters);
+};
+
 map.on('load', () => {
-  enablePage();
   setStartView();
-  getAdsData(addPinsToMap, showAlertDialog);
+  enableForm(offerForm);
+  getAdsData(onSuccessGetData, showAlertDialog);
 }).setView(COORDINATES, ZOOM);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

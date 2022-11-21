@@ -1,3 +1,7 @@
+import { getLocalData, MAX_OFFER_PINS } from './data.js';
+import { addPinsToMap } from './map.js';
+import { debounce } from './utile.js';
+
 const FILTER_PRICE_VALUES = {
   low: 10000,
   middle: 50000,
@@ -8,18 +12,17 @@ const housingTypeField = document.getElementById('housing-type');
 const housingPriceField = document.getElementById('housing-price');
 const housingRoomsField = document.getElementById('housing-rooms');
 const housingGuestsField = document.getElementById('housing-guests');
-const housingCheckboxFeatures = filtersForm.querySelectorAll('.map__checkbox');
 
-const filterByType = (offer, housingField) => {
-  if (housingField.value === 'any') {
+const filterByType = (offer) => {
+  if (housingTypeField.value === 'any') {
     return true;
   }
 
-  return offer.offer.type === housingField.value;
+  return offer.offer.type === housingTypeField.value;
 };
 
-const filterByPrice = (offer, housingField) => {
-  switch (housingField.value) {
+const filterByPrice = (offer) => {
+  switch (housingPriceField.value) {
     case 'any':
       return true;
 
@@ -34,54 +37,35 @@ const filterByPrice = (offer, housingField) => {
   }
 };
 
-const filterByRooms = (offer, housingField) => {
-  if (housingField.value === 'any') {
+const filterByRooms = (offer) => (housingRoomsField.value === 'any') ? true : offer.offer.rooms === Number(housingRoomsField.value);
+
+
+const filterByGuests = (offer) => (housingGuestsField.value === 'any') ? true : offer.offer.guests === Number(housingGuestsField.value);
+
+const filterByFeatures = (offer) => {
+  const checkedCheckboxes = Array.from(document.querySelectorAll('input[name = "features"]:checked'));
+
+  if (!checkedCheckboxes.length) {
     return true;
-  }
-
-  return offer.offer.rooms === Number(housingField.value);
-};
-
-const filterByGuests = (offer, housingField) => {
-  if (housingField.value === 'any') {
-    return true;
-  }
-
-  return offer.offer.guests === Number(housingField.value);
-};
-
-const filterByFeatures = (offer, features) => {
-  if (!features.length) {
-    return true;
-  }
-  if (!offer.offer.features) {
+  } else if (!offer.offer.features) {
     return false;
   }
 
-  return features.every((feature) => offer.offer.features.includes(feature));
+  return checkedCheckboxes.every((feature) => offer.offer.features.includes(feature.value));
 };
 
-const filterAds = (offers, maxAds) => {
+const filterAds = () => {
+  const localData = getLocalData();
   const filteredOffers = [];
 
-  for (const offer of offers) {
-    if (filteredOffers.length >= maxAds) {
+  for (const offer of localData) {
+    if (filteredOffers.length >= MAX_OFFER_PINS) {
       break;
-    }
-
-    const selectedFeatures = [];
-
-    housingCheckboxFeatures.forEach((feature) => {
-      if (feature.checked) {
-        selectedFeatures.push(feature.value);
-      }
-    });
-
-    if (filterByType(offer, housingTypeField) &&
-      filterByPrice(offer, housingPriceField) &&
-      filterByGuests(offer, housingGuestsField) &&
-      filterByRooms(offer, housingRoomsField) &&
-      filterByFeatures(offer, selectedFeatures)) {
+    } else if (filterByType(offer) &&
+      filterByPrice(offer) &&
+      filterByGuests(offer) &&
+      filterByRooms(offer) &&
+      filterByFeatures(offer)) {
       filteredOffers.push(offer);
     }
   }
@@ -89,10 +73,9 @@ const filterAds = (offers, maxAds) => {
   return filteredOffers;
 };
 
-export const SetFilter = (offers, maxAds, cb) => {
-  filtersForm.addEventListener('change', () => {
-    const filteredOffers = filterAds(offers, maxAds);
+const addPinsWithDebounce = debounce(addPinsToMap);
 
-    cb(filteredOffers);
-  });
-};
+filtersForm.addEventListener('change', () => {
+  const filteredOffers = filterAds();
+  addPinsWithDebounce(filteredOffers);
+});

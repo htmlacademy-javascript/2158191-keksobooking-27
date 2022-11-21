@@ -1,10 +1,10 @@
-import { setAddressField } from './form.js';
+import { filters, offerForm, setAddressField } from './form.js';
 import { showAlertDialog } from './dialogs.js';
 import { createCard } from './offer-card.js';
-import { enablePage } from './form.js';
 import { getAdsData } from './api.js';
+import { enableForm } from './utile.js';
+import { getMaxLocalData, saveLocalData } from './data.js';
 
-const MAX_ADS = 10;
 const COORDINATES = {
   lat: 35.68421,
   lng: 139.75107,
@@ -58,21 +58,26 @@ export const setStartView = () =>{
   map.setView(COORDINATES, ZOOM);
 };
 
-const addPinsToMap = (ads) => {
+export const addPinsToMap = (ads) => {
   markerGroup.clearLayers();
 
-  const maxAds = ads.slice(0, MAX_ADS);
-
-  maxAds.forEach((ad) => {
+  ads.forEach((ad) => {
     createPin(ad).addTo(markerGroup)
       .bindPopup(createCard(ad));
   });
 };
 
+const onSuccessGetData = (offers) => {
+  saveLocalData(offers);
+  addPinsToMap(getMaxLocalData());
+  enableForm(filters);
+};
+
 map.on('load', () => {
-  enablePage();
-  getAdsData(addPinsToMap, showAlertDialog);
-});
+  setStartView();
+  enableForm(offerForm);
+  getAdsData(onSuccessGetData, showAlertDialog);
+}).setView(COORDINATES, ZOOM);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 19,
@@ -85,5 +90,3 @@ mainPinMarker.on('moveend', (evt) => {
 
   setAddressField(lat, lng);
 });
-
-setStartView();

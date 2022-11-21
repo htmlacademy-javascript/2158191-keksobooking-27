@@ -42,3 +42,13 @@ export const enableForm = (formEl) => {
     child.disabled = false;
   }
 };
+
+export function debounce (callback, timeoutDelay = 1000) {
+  let timeoutId;
+
+  return (...rest) => {
+    clearTimeout(timeoutId);
+
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+}

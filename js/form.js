@@ -1,4 +1,4 @@
-import { setStartView } from './map.js';
+import { resetView } from './map.js';
 import { saveAdData } from './api.js';
 import { showSuccessDialog, showErrorDialog } from './dialogs.js';
 import { disableForm } from './utile.js';
@@ -6,6 +6,8 @@ import { disableForm } from './utile.js';
 const MAX_LENGTH_TITLE = 100;
 const MIN_LENGTH_TITLE = 30;
 const MAX_VALUE_PRICE = 100000;
+const DEFAULT_PRICE_VALUE = 0;
+const DEFAULT_AVATAR = 'img/muffin-grey.svg';
 const MIN_PRICES = {
   bungalow: 0,
   flat: 1000,
@@ -19,21 +21,26 @@ const ROOMS = {
   3: ['3', '2' , '1'],
   100: ['0'],
 };
-const DEFAULT_PRICE_VALUE = 0;
+const FILE_TYPES = ['jpg', 'jpeg', 'png'];
 
 export const offerForm = document.querySelector('.ad-form');
 export const filters = document.querySelector('.map__filters');
-const titleField = offerForm.querySelector('#title');
+const titleField = document.getElementById('title');
 const checkFieldset = offerForm.querySelector('.ad-form__element--time');
-const checkinField = offerForm.querySelector('#timein');
-const checkoutField = offerForm.querySelector('#timeout');
-const roomsField = offerForm.querySelector('#room_number');
-const guestsField = offerForm.querySelector('#capacity');
-const typeField = offerForm.querySelector('#type');
-const priceField = offerForm.querySelector('#price');
+const checkinField = document.getElementById('timein');
+const checkoutField = document.getElementById('timeout');
+const roomsField = document.getElementById('room_number');
+const guestsField = document.getElementById('capacity');
+const typeField = document.getElementById('type');
+const priceField = document.getElementById('price');
 const sliderElem = offerForm.querySelector('.ad-form__slider');
-const addressField = offerForm.querySelector('#address');
+const addressField = document.getElementById('address');
 const submitButton = offerForm.querySelector('.ad-form__submit');
+const avatarChooser = document.getElementById('avatar');
+const avatarPreview = offerForm.querySelector('.ad-form-header__image');
+const imageChooser = document.getElementById('images');
+const imagePreview = offerForm.querySelector('.ad-form__photo');
+const resetButton = offerForm.querySelector('.ad-form__reset');
 
 const disablePage = () => {
   disableForm(offerForm);
@@ -136,15 +143,22 @@ const unblockSubmitButton = () => {
 };
 
 export const resetForm = () => {
+  filters.reset();
   offerForm.reset();
   sliderElem.noUiSlider.set(DEFAULT_PRICE_VALUE);
   priceField.value = DEFAULT_PRICE_VALUE;
+  imagePreview.innerHTML = '';
+  avatarPreview.src = DEFAULT_AVATAR;
+  pristine.reset();
+  resetView();
 };
+
+resetButton.addEventListener('click', () => resetForm());
 
 const onSuccessSaveAdData = () => {
   showSuccessDialog();
   resetForm();
-  setStartView();
+  resetView();
 };
 
 offerForm.addEventListener('submit', async (evt) => {
@@ -154,6 +168,33 @@ offerForm.addEventListener('submit', async (evt) => {
     blockSubmitButton();
     await saveAdData(onSuccessSaveAdData, showErrorDialog, new FormData(evt.target));
     unblockSubmitButton();
+  }
+});
+
+const isValidImage = (file) => {
+  const fileName = file.name.toLowerCase();
+
+  return FILE_TYPES.some((it) => fileName.endsWith(it));
+
+};
+
+avatarChooser.addEventListener('change', () => {
+  const file = avatarChooser.files[0];
+
+  if (file && isValidImage(file)) {
+    avatarPreview.src = URL.createObjectURL(file);
+  }
+});
+
+imageChooser.addEventListener('change', () => {
+  const file = imageChooser.files[0];
+
+  if (file && isValidImage(file)) {
+    imagePreview.innerHTML = '';
+    const image = document.createElement('img');
+    image.src = URL.createObjectURL(file);
+    image.classList.add('ad-form__photo');
+    imagePreview.append(image);
   }
 });
 

@@ -2,10 +2,9 @@ import { filters, offerForm, setAddressField } from './form.js';
 import { showAlertDialog } from './dialogs.js';
 import { createCard } from './offer-card.js';
 import { getAdsData } from './api.js';
-import { SetFilter } from './filter.js';
-import { debounce, enableForm } from './utile.js';
+import { enableForm } from './utile.js';
+import { getMaxLocalData, saveLocalData } from './data.js';
 
-const MAX_ADS = 10;
 const COORDINATES = {
   lat: 35.68421,
   lng: 139.75107,
@@ -62,17 +61,15 @@ export const setStartView = () =>{
 export const addPinsToMap = (ads) => {
   markerGroup.clearLayers();
 
-  const maxAds = ads.slice(0, MAX_ADS);
-
-  maxAds.forEach((ad) => {
+  ads.forEach((ad) => {
     createPin(ad).addTo(markerGroup)
       .bindPopup(createCard(ad));
   });
 };
 
 const onSuccessGetData = (offers) => {
-  addPinsToMap(offers);
-  SetFilter(offers, MAX_ADS, debounce(addPinsToMap));
+  saveLocalData(offers);
+  addPinsToMap(getMaxLocalData());
   enableForm(filters);
 };
 

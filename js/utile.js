@@ -43,7 +43,7 @@ export const enableForm = (formEl) => {
   }
 };
 
-export function debounce (callback, timeoutDelay = 500) {
+export function debounce (callback, timeoutDelay = 1000) {
   let timeoutId;
 
   return (...rest) => {

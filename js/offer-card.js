@@ -1,8 +1,4 @@
-import {getOffers, MAX_OFFERS} from './data.js';
-
 const cardTemplate = document.querySelector('#card').content;
-const similarOffers = getOffers(MAX_OFFERS);
-const map = document.querySelector('#map-canvas');
 
 const offerType = {
   flat: 'Квартира' ,
@@ -12,7 +8,7 @@ const offerType = {
   hotel: 'Отель',
 };
 
-const createCard = (ad) => {
+export const createCard = (ad) => {
   const cardElement = cardTemplate.cloneNode(true);
 
   cardElement.querySelector('.popup__avatar').src = ad.author.avatar;
@@ -63,11 +59,3 @@ const createCard = (ad) => {
 
   return cardElement;
 };
-
-const renderOfferCard = (offer) => {
-  const offerCard = createCard(offer);
-
-  map.appendChild(offerCard);
-};
-
-renderOfferCard(similarOffers[0]);

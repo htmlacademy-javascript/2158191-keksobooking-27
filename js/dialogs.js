@@ -2,7 +2,11 @@ const ALERT_SHOW_TIME = 5000;
 
 const errorDialogTemplate = document.getElementById('error').content;
 const successDialogTemplate = document.getElementById('success').content;
+<<<<<<< HEAD
 const body = document.body;
+=======
+const body = document.querySelector('body');
+>>>>>>> f3ac4120a11fcff31f400c11fe75c548c894f51c
 let activeDialog = null;
 
 const onDialogKeydown = (evt) => {

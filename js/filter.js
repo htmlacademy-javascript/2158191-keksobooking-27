@@ -66,6 +66,12 @@ const filterAds = () => {
   return filteredOffers;
 };
 
+<<<<<<< HEAD
 const onFilterChange = debounce(()=> addPinsToMap(filterAds()));
 
 filtersForm.addEventListener('change', onFilterChange);
+=======
+const addPinsWithDebounce = debounce(()=> addPinsToMap(filterAds()));
+
+filtersForm.addEventListener('change', () => addPinsWithDebounce());
+>>>>>>> f3ac4120a11fcff31f400c11fe75c548c894f51c

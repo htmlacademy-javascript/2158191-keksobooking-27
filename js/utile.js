@@ -43,7 +43,12 @@ export const enableForm = (formEl) => {
   }
 };
 
-const fieldsetElem = document.querySelector('.ad-form');
+export function debounce (callback, timeoutDelay = 500) {
+  let timeoutId;
 
-disableForm(fieldsetElem);
-enableForm(fieldsetElem);
+  return (...rest) => {
+    clearTimeout(timeoutId);
+
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+}

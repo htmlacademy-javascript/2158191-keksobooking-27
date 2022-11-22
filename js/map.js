@@ -49,7 +49,7 @@ const createPin = (ad) => {
   return marker;
 };
 
-export const setStartView = () =>{
+export const resetView = () =>{
   mainPinMarker.setLatLng(COORDINATES);
 
   const {lat, lng} = mainPinMarker.getLatLng();
@@ -74,7 +74,7 @@ const onSuccessGetData = (offers) => {
 };
 
 map.on('load', () => {
-  setStartView();
+  resetView();
   enableForm(offerForm);
   getAdsData(onSuccessGetData, showAlertDialog);
 }).setView(COORDINATES, ZOOM);

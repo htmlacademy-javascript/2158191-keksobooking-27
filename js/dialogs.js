@@ -1,7 +1,7 @@
 const ALERT_SHOW_TIME = 5000;
 
-const errorDialogTemplate = document.querySelector('#error').content;
-const successDialogTemplate = document.querySelector('#success').content;
+const errorDialogTemplate = document.getElementById('error').content;
+const successDialogTemplate = document.getElementById('success').content;
 const body = document.querySelector('body');
 let activeDialog = null;
 

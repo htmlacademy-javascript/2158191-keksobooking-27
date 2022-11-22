@@ -13,13 +13,11 @@ const housingPriceField = document.getElementById('housing-price');
 const housingRoomsField = document.getElementById('housing-rooms');
 const housingGuestsField = document.getElementById('housing-guests');
 
-const filterByType = (offer) => {
-  if (housingTypeField.value === 'any') {
-    return true;
-  }
+const filterByType = (offer) => housingTypeField.value === 'any' || offer.offer.type === housingTypeField.value;
 
-  return offer.offer.type === housingTypeField.value;
-};
+const filterByRooms = (offer) => housingRoomsField.value === 'any' || offer.offer.rooms === Number(housingRoomsField.value);
+
+const filterByGuests = (offer) => housingGuestsField.value === 'any' || offer.offer.guests === Number(housingGuestsField.value);
 
 const filterByPrice = (offer) => {
   switch (housingPriceField.value) {
@@ -37,21 +35,14 @@ const filterByPrice = (offer) => {
   }
 };
 
-const filterByRooms = (offer) => (housingRoomsField.value === 'any') ? true : offer.offer.rooms === Number(housingRoomsField.value);
-
-
-const filterByGuests = (offer) => (housingGuestsField.value === 'any') ? true : offer.offer.guests === Number(housingGuestsField.value);
-
 const filterByFeatures = (offer) => {
   const checkedCheckboxes = Array.from(document.querySelectorAll('input[name = "features"]:checked'));
 
-  if (!checkedCheckboxes.length) {
-    return true;
-  } else if (!offer.offer.features) {
+  if (!offer.offer.features) {
     return false;
   }
 
-  return checkedCheckboxes.every((feature) => offer.offer.features.includes(feature.value));
+  return !checkedCheckboxes.length || checkedCheckboxes.every((feature) => offer.offer.features.includes(feature.value));
 };
 
 const filterAds = () => {
@@ -61,7 +52,9 @@ const filterAds = () => {
   for (const offer of localData) {
     if (filteredOffers.length >= MAX_OFFER_PINS) {
       break;
-    } else if (filterByType(offer) &&
+    }
+
+    if (filterByType(offer) &&
       filterByPrice(offer) &&
       filterByGuests(offer) &&
       filterByRooms(offer) &&
@@ -73,9 +66,6 @@ const filterAds = () => {
   return filteredOffers;
 };
 
-const addPinsWithDebounce = debounce(addPinsToMap);
+const addPinsWithDebounce = debounce(()=> addPinsToMap(filterAds()));
 
-filtersForm.addEventListener('change', () => {
-  const filteredOffers = filterAds();
-  addPinsWithDebounce(filteredOffers);
-});
+filtersForm.addEventListener('change', () => addPinsWithDebounce());

@@ -93,6 +93,10 @@ const getRoomsErrorMessage = () => {
 
 pristine.addValidator(roomsField, validateRooms, getRoomsErrorMessage);
 
+guestsField.addEventListener('change', () => {
+  pristine.validate(roomsField);
+});
+
 const onCheckChange = (evt) => {
   if (evt.target.id === 'timein') {
     checkoutField.value = checkinField.value;

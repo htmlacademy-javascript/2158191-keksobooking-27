@@ -6,6 +6,11 @@ const FILTER_PRICE_VALUES = {
   low: 10000,
   middle: 50000,
 };
+const FILTER_ELEMENTS_VALUES = {
+  any: 'any',
+  low: 'low',
+  middle: 'middle',
+};
 
 const filtersForm = document.querySelector('.map__filters');
 const housingTypeField = document.getElementById('housing-type');
@@ -13,21 +18,21 @@ const housingPriceField = document.getElementById('housing-price');
 const housingRoomsField = document.getElementById('housing-rooms');
 const housingGuestsField = document.getElementById('housing-guests');
 
-const filterByType = (offer) => housingTypeField.value === 'any' || offer.offer.type === housingTypeField.value;
+const filterByType = (offer) => housingTypeField.value === FILTER_ELEMENTS_VALUES.any || offer.offer.type === housingTypeField.value;
 
-const filterByRooms = (offer) => housingRoomsField.value === 'any' || offer.offer.rooms === Number(housingRoomsField.value);
+const filterByRooms = (offer) => housingRoomsField.value === FILTER_ELEMENTS_VALUES.any || offer.offer.rooms === Number(housingRoomsField.value);
 
-const filterByGuests = (offer) => housingGuestsField.value === 'any' || offer.offer.guests === Number(housingGuestsField.value);
+const filterByGuests = (offer) => housingGuestsField.value === FILTER_ELEMENTS_VALUES.any || offer.offer.guests === Number(housingGuestsField.value);
 
 const filterByPrice = (offer) => {
   switch (housingPriceField.value) {
-    case 'any':
+    case FILTER_ELEMENTS_VALUES.any:
       return true;
 
-    case 'low':
+    case FILTER_ELEMENTS_VALUES.low:
       return offer.offer.price < FILTER_PRICE_VALUES.low;
 
-    case 'middle':
+    case FILTER_ELEMENTS_VALUES.middle:
       return offer.offer.price >= FILTER_PRICE_VALUES.low && offer.offer.price <= FILTER_PRICE_VALUES.middle;
 
     default:
